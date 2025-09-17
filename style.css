@@ -1,0 +1,255 @@
+/* --- Basic Styles --- */
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #222;
+  margin: 0;
+  overflow: hidden;
+}
+
+/* --- Music Player (New Design) --- */
+.music-player {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 55px; /* Smaller size */
+  height: 55px; /* Smaller size */
+  z-index: 200;
+  border-radius: 50%;
+  cursor: pointer;
+  background: rgba(25, 25, 25, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+.music-player:hover { 
+  transform: scale(1.1);
+  background: rgba(40, 40, 40, 0.6);
+}
+.music-player audio { display: none; }
+.play-btn { width: 100%; height: 100%; position: relative; }
+
+/* Play icon (triangle) */
+.play-btn.play::before { 
+  content: ''; 
+  position: absolute; 
+  top: 50%; 
+  left: 55%; 
+  transform: translate(-50%, -50%); 
+  border-left: 12px solid white; /* Smaller icon */
+  border-top: 8px solid transparent; /* Smaller icon */
+  border-bottom: 8px solid transparent; /* Smaller icon */
+}
+
+/* Pause icon (bars) */
+.play-btn.pause::before, .play-btn.pause::after { 
+  content: ''; 
+  position: absolute; 
+  top: 50%; 
+  transform: translateY(-50%); 
+  width: 4px; /* Thinner bars */
+  height: 14px; /* Shorter bars */
+  background-color: white; 
+}
+.play-btn.pause::before { left: 20px; }
+.play-btn.pause::after { right: 20px; }
+
+/* --- 3D Gallery --- */
+.container {
+  position: absolute;
+  top: 55%;
+  width: 200px;
+  height: 200px;
+  z-index: 10;
+  transform-style: preserve-3d;
+  transition: transform 1s ease, opacity 0.5s ease, visibility 0.5s ease;
+  cursor: default;
+}
+.container.paused {
+  opacity: 0;
+  visibility: hidden;
+}
+.container span {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  transform-style: preserve-3d;
+  transform: rotateY(calc(var(--i) * 45deg)) translateZ(400px);
+  -webkit-box-reflect: below 2.5px linear-gradient(transparent, transparent, rgba(0,0,0,0.2));
+  transition: opacity 0.5s ease, filter 0.5s ease;
+  cursor: pointer;
+}
+.container span img {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 6px ridge #ccc;
+}
+
+/* --- Text Display Area --- */
+#text-display-area {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-105%, -50%) scale(0.8);
+  width: 300px;
+  padding: 20px 30px;
+  background: rgba(20, 20, 20, 0.7);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  transition: all 0.5s ease-out;
+  z-index: 101;
+  opacity: 0;
+  pointer-events: none;
+}
+#text-display-area.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-125%, -50%) scale(1);
+}
+#text-display-area h2 { margin-top: 0; color: #ff4757; border-bottom: 1px solid #555; padding-bottom: 10px; }
+#text-display-area p { line-height: 1.6; }
+
+/* --- Main Image Display Box --- */
+#display-image-box {
+  position: fixed;
+  top: 55%;
+  left: 50%;
+  transform: translate(5%, -50%) scale(0.8);
+  opacity: 0;
+  width: 55vw;
+  max-width: 770px;
+  height: 66vh;
+  max-height: 550px;
+  border-radius: 10px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  pointer-events: none;
+  transition: all 0.5s ease-out;
+}
+#display-image-box.visible {
+  transform: translate(-10%, -50%) scale(1); /* Moves further left */
+  opacity: 1;
+  pointer-events: auto;
+}
+#display-image-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+#close-display-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  color: white;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  z-index: 101;
+  text-shadow: 0 0 5px rgba(0,0,0,0.8);
+}
+#close-display-btn:hover {
+  transform: scale(1.2);
+  color: #ff4757;
+}
+
+/* --- Effects & Anniversary Text --- */
+#fireworks-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+#anniversary-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 5vh;
+  z-index: 2;
+  pointer-events: none;
+}
+#anniversary-text {
+  font-family: 'Garamond', serif;
+  font-weight: bold;
+  color: #fff;
+  text-align: center;
+  transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+}
+#anniversary-text span {
+  display: block;
+  text-shadow: 0 0 15px rgba(255, 223, 100, 0.8), 0 0 25px rgba(255, 165, 0, 0.6);
+}
+#anniversary-text span:nth-child(1) { font-size: 8vw; color: #FFD700; }
+#anniversary-text span:nth-child(2) { font-size: 3vw; letter-spacing: 5px; text-transform: uppercase; }
+#anniversary-text span:nth-child(3) { font-size: 5vw; }
+
+#anniversary-container.zoomed-in #anniversary-text {
+  transform: translateY(-12vh) scale(0.5);
+  opacity: 0.7;
+}
+
+/* --- Navigation Buttons --- */
+.navigation-buttons {
+  position: fixed;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+  padding: 0 2vw;
+  box-sizing: border-box;
+  z-index: 50;
+  pointer-events: none;
+}
+.navigation-buttons button {
+  pointer-events: auto;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  background: rgba(0, 0, 0, 0.3);
+  color: white;
+  font-size: 40px;
+  line-height: 55px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.navigation-buttons button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+.navigation-buttons button:active {
+  transform: scale(0.95);
+}
+.container {
+  position: absolute;
+  top: 60%;
+  width: 200px;
+  height: 200px;
+  z-index: 10;
+  transform-style: preserve-3d;
+  animation: gallery 40s linear infinite; /* Add this line back */
+  transition: transform 1s ease, opacity 0.5s ease, visibility 0.5s ease;
+  cursor: pointer; /* Change back to pointer */
+}
