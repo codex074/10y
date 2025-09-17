@@ -1,53 +1,392 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10 Year Anniversary</title>
+    
+    <!-- CSS Code -->
+    <style>
+        /* --- Basic Setup & Background --- */
+        :root {
+            --glow-color: rgba(255, 223, 100, 0.8);
+            --gold-color: #FFD700;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #1a1a1a;
+            margin: 0;
+            overflow: hidden;
+            font-family: sans-serif;
+        }
+
+        #fireworks-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* --- Anniversary Header --- */
+        #anniversary-header {
+            position: fixed;
+            top: 5vh;
+            width: 100%;
+            text-align: center;
+            color: #fff;
+            z-index: 2;
+            pointer-events: none;
+            /* Added transition for smooth movement */
+            transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+        }
+        #anniversary-header h1, #anniversary-header h2, #anniversary-header h3 {
+            margin: 0;
+            font-family: 'Garamond', serif;
+            font-weight: bold;
+        }
+        #anniversary-header h1 {
+            font-size: 6vw;
+            color: var(--gold-color);
+        }
+        #anniversary-header h2 {
+            font-size: 2.5vw;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+        }
+        #anniversary-header h3 {
+            font-size: 4vw;
+        }
+        
+        /* New style: This class will be added by JS when an image is viewed */
+        body.details-visible #anniversary-header {
+            transform: translateY(-10vh) scale(0.6);
+            opacity: 0.7;
+        }
+
+
+        /* --- 3D Gallery --- */
+        .container {
+            position: absolute;
+            top: 60%;
+            transform: translateY(-50%);
+            width: 180px;
+            height: 270px;
+            z-index: 10;
+            pointer-events: none;
+        }
+        .carousel {
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            animation: gallery-auto-rotate 25s linear infinite;
+        }
+        .carousel.paused {
+            animation-play-state: paused;
+            opacity: 0;
+            visibility: hidden;
+        }
+        .carousel span {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transform: rotateY(calc(var(--i) * 45deg)) translateZ(380px);
+            cursor: pointer;
+            pointer-events: auto;
+        }
+        .carousel span img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 15px;
+            border: 5px solid #fff;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            -webkit-box-reflect: below 1px linear-gradient(transparent, transparent, #0004);
+        }
+        @keyframes gallery-auto-rotate {
+            0% { transform: perspective(1000px) rotateY(0deg); }
+            100% { transform: perspective(1000px) rotateY(360deg); }
+        }
+
+        /* --- Text Display Area --- */
+        #text-display-area {
+            position: fixed;
+            top: 55%;
+            left: 50%;
+            transform: translate(-115%, -50%) scale(0.8);
+            width: 300px;
+            padding: 20px 30px;
+            background: rgba(20, 20, 20, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            transition: all 0.5s ease-out;
+            z-index: 101;
+            opacity: 0;
+            pointer-events: none;
+        }
+        #text-display-area.visible {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translate(-115%, -50%) scale(1);
+        }
+        #text-display-area h2 { margin-top: 0; color: #ff4757; border-bottom: 1px solid #555; padding-bottom: 10px; }
+        #text-display-area p { line-height: 1.6; }
+
+        /* --- Main Image Display Box --- */
+        #display-image-box {
+            position: fixed;
+            top: 55%;
+            left: 50%;
+            transform: translate(-5%, -50%) scale(0.8);
+            opacity: 0;
+            width: 55vw;
+            max-width: 770px;
+            height: 66vh;
+            max-height: 550px;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            pointer-events: none;
+            transition: all 0.5s ease-out;
+        }
+        #display-image-box.visible {
+            transform: translate(-5%, -50%) scale(1);
+            opacity: 1;
+            pointer-events: auto;
+        }
+        #display-image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        #close-display-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            z-index: 101;
+            text-shadow: 0 0 5px rgba(0,0,0,0.8);
+        }
+        #close-display-btn:hover {
+            transform: scale(1.2);
+            color: #ff4757;
+        }
+
+        /* --- Music Player --- */
+        #music-player {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 55px;
+            height: 55px;
+            z-index: 200;
+            border-radius: 50%;
+            cursor: pointer;
+            background: rgba(25, 25, 25, 0.5);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        #music-player:hover { 
+            transform: scale(1.1);
+        }
+        #music-player audio { display: none; }
+        .play-btn { width: 100%; height: 100%; position: relative; }
+        .play-btn.play::before { 
+            content: ''; 
+            position: absolute; 
+            top: 50%; 
+            left: 55%; 
+            transform: translate(-50%, -50%); 
+            border-left: 12px solid white;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+        }
+        .play-btn.pause::before, .play-btn.pause::after { 
+            content: ''; 
+            position: absolute; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            width: 4px;
+            height: 14px;
+            background-color: white; 
+        }
+        .play-btn.pause::before { left: 20px; }
+        .play-btn.pause::after { right: 20px; }
+    </style>
 </head>
 <body>
 
-  <canvas id="fireworks-canvas"></canvas>
+    <canvas id="fireworks-canvas"></canvas>
 
-  <div id="anniversary-container">
-    <div id="anniversary-text">
-      <span>10</span>
-      <span>year</span>
-      <span>Anniversary</span>
+    <header id="anniversary-header">
+        <h1>10</h1>
+        <h2>YEAR</h2>
+        <h3>Anniversary</h3>
+    </header>
+
+    <main id="gallery-container" class="container">
+        <div class="carousel">
+            <!-- Corrected image paths below -->
+            <span id="image-1" style="--i:1" data-title="หัวข้อรูปที่ 1" data-description="รายละเอียดรูปภาพที่หนึ่ง"><img src="./1.jpg" alt="Image 1"></span>
+            <span id="image-2" style="--i:2" data-title="หัวข้อรูปที่ 2" data-description="รายละเอียดรูปภาพที่สอง"><img src="./2.jpg" alt="Image 2"></span>
+            <span id="image-3" style="--i:3" data-title="หัวข้อรูปที่ 3" data-description="รายละเอียดรูปภาพที่สาม"><img src="./3.jpg" alt="Image 3"></span>
+            <span id="image-4" style="--i:4" data-title="หัวข้อรูปที่ 4" data-description="รายละเอียดรูปภาพที่สี่"><img src="./4.jpg" alt="Image 4"></span>
+            <span id="image-5" style="--i:5" data-title="หัวข้อรูปที่ 5" data-description="รายละเอียดรูปภาพที่ห้า"><img src="./5.jpg" alt="Image 5"></span>
+            <span id="image-6" style="--i:6" data-title="หัวข้อรูปที่ 6" data-description="รายละเอียดรูปภาพที่หก"><img src="./6.jpg" alt="Image 6"></span>
+            <span id="image-7" style="--i:7" data-title="หัวข้อรูปที่ 7" data-description="รายละเอียดรูปภาพที่เจ็ด"><img src="./7.jpg" alt="Image 7"></span>
+            <span id="image-8" style="--i:8" data-title="หัวข้อรูปที่ 8" data-description="รายละเอียดรูปภาพที่แปด"><img src="./8.jpg" alt="Image 8"></span>
+        </div>
+    </main>
+    
+    <div id="music-player">
+        <audio id="music-track" src="./music.mp3" loop></audio> <!-- Corrected audio path -->
+        <div id="play-pause-btn" class="play-btn play" title="Play/Pause Music"></div>
     </div>
-  </div>
 
-  <div id="custom-player" class="music-player">
-    <audio id="music-track" src="music.mp3" loop></audio>
-    <div id="play-pause-btn" class="play-btn play"></div>
-  </div>
+    <div id="text-display-area">
+        <h2 id="text-title"></h2>
+        <p id="text-description"></p>
+    </div>
 
-  <div id="text-display-area">
-    <h2 id="text-title"></h2>
-    <p id="text-description"></p>
-  </div>
+    <div id="display-image-box" class="hidden">
+        <span id="close-display-btn">&times;</span>
+        <img id="main-display-image" src="" alt="Zoomed Image">
+    </div>
 
-  <div id="gallery-container" class="container">
-    <span id="image-1" style="--i:1" data-title="หัวข้อรูปที่ 1" data-description="รายละเอียดรูปภาพที่หนึ่ง"><img src="1.jpg" alt=""></span>
-    <span id="image-2" style="--i:2" data-title="หัวข้อรูปที่ 2" data-description="รายละเอียดรูปภาพที่สอง"><img src="2.jpg" alt=""></span>
-    <span id="image-3" style="--i:3" data-title="หัวข้อรูปที่ 3" data-description="รายละเอียดรูปภาพที่สาม"><img src="3.jpg" alt=""></span>
-    <span id="image-4" style="--i:4" data-title="หัวข้อรูปที่ 4" data-description="รายละเอียดรูปภาพที่สี่"><img src="4.jpg" alt=""></span>
-    <span id="image-5" style="--i:5" data-title="หัวข้อรูปที่ 5" data-description="รายละเอียดรูปภาพที่ห้า"><img src="5.jpg" alt=""></span>
-    <span id="image-6" style="--i:6" data-title="หัวข้อรูปที่ 6" data-description="รายละเอียดรูปภาพที่หก"><img src="6.jpg" alt=""></span>
-    <span id="image-7" style="--i:7" data-title="หัวข้อรูปที่ 7" data-description="รายละเอียดรูปภาพที่เจ็ด"><img src="7.jpg" alt=""></span>
-    <span id="image-8" style="--i:8" data-title="หัวข้อรูปที่ 8" data-description="รายละเอียดรูปภาพที่แปด"><img src="8.jpg" alt=""></span>
-  </div>
-  
-  <div class="navigation-buttons">
-    <button id="prev-btn">‹</button>
-    <button id="next-btn">›</button>
-  </div>
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/fireworks-js@2.10.7/dist/index.umd.js"></script>
 
-  <div id="display-image-box" class="hidden">
-    <span id="close-display-btn">&times;</span>
-    <img id="main-display-image" src="">
-  </div>
+    <!-- JavaScript Code -->
+    <script>
+        // --- Fireworks Effect ---
+        const fireworksContainer = document.getElementById('fireworks-canvas');
+        if (fireworksContainer) {
+        const fireworks = new Fireworks.default(fireworksContainer, {
+            opacity: 0.5,
+            acceleration: 1.02,
+            friction: 0.97,
+            gravity: 1.5,
+            particles: 60,
+            explosion: 6,
+        });
+        fireworks.start();
+        }
 
-  <script src="https://cdn.jsdelivr.net/npm/fireworks-js@2.10.7/dist/index.umd.js"></script>
-  <script src="script.js"></script>
+        // --- Music Player ---
+        const player = document.getElementById('music-player');
+        const audio = document.getElementById('music-track');
+        const playBtn = document.getElementById('play-pause-btn');
+
+        if (player) {
+            const togglePlay = () => {
+            if (audio.paused) {
+                audio.play();
+                playBtn.className = 'play-btn pause';
+            } else {
+                audio.pause();
+                playBtn.className = 'play-btn play';
+            }
+            };
+            player.addEventListener('click', togglePlay);
+        }
+
+        // --- Gallery, Text, and Display Logic ---
+        const carousel = document.querySelector('.carousel');
+        const imageSpans = document.querySelectorAll('.carousel span');
+        const textArea = document.getElementById('text-display-area');
+        const textTitle = document.getElementById('text-title');
+        const textDesc = document.getElementById('text-description');
+        const displayImageBox = document.getElementById('display-image-box');
+        const mainDisplayImage = document.getElementById('main-display-image');
+        const closeDisplayBtn = document.getElementById('close-display-btn');
+        
+        let currentActiveId = null;
+
+        function resumeGallery() {
+            carousel.classList.remove('paused');
+            textArea.classList.remove('visible');
+            displayImageBox.classList.remove('visible');
+            document.body.classList.remove('details-visible'); // <<< Remove class from body
+            if (currentActiveId) {
+                document.getElementById(currentActiveId).classList.remove('active');
+            }
+            currentActiveId = null;
+        }
+
+        function showDetails(span) {
+            if (!carousel.classList.contains('paused')) {
+                carousel.classList.add('paused');
+                
+                imageSpans.forEach(s => s.classList.remove('active'));
+                span.classList.add('active');
+                currentActiveId = span.id;
+
+                const title = span.dataset.title;
+                const description = span.dataset.description;
+                textTitle.textContent = title;
+                textDesc.textContent = description;
+                textArea.classList.add('visible');
+                
+                mainDisplayImage.src = span.querySelector('img').src;
+                displayImageBox.classList.add('visible');
+                document.body.classList.add('details-visible'); // <<< Add class to body
+            }
+        }
+
+        // Event Listeners for image spans
+        imageSpans.forEach(span => {
+            span.addEventListener('click', (event) => {
+                event.stopPropagation();
+                showDetails(span);
+            });
+        });
+
+        // Event Listener for close button
+        if(closeDisplayBtn) {
+            closeDisplayBtn.addEventListener('click', (event) => {
+                event.stopPropagation();
+                resumeGallery();
+            });
+        }
+
+        // Global click listener to close popups
+        document.body.addEventListener('click', (event) => {
+            if (carousel.classList.contains('paused') && 
+                !event.target.closest('.carousel span') &&
+                !event.target.closest('#text-display-area') &&
+                !event.target.closest('#display-image-box') &&
+                !event.target.closest('#music-player')
+            ) {
+                resumeGallery();
+            }
+        });
+    </script>
 
 </body>
 </html>
+
