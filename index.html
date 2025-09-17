@@ -42,7 +42,6 @@
             color: #fff;
             z-index: 2;
             pointer-events: none;
-            /* Added transition for smooth movement */
             transition: transform 0.5s ease-out, opacity 0.5s ease-out;
         }
         #anniversary-header h1, #anniversary-header h2, #anniversary-header h3 {
@@ -63,7 +62,6 @@
             font-size: 4vw;
         }
         
-        /* New style: This class will be added by JS when an image is viewed */
         body.details-visible #anniversary-header {
             transform: translateY(-10vh) scale(0.6);
             opacity: 0.7;
@@ -251,20 +249,21 @@
 
     <main id="gallery-container" class="container">
         <div class="carousel">
-            <!-- Corrected image paths below -->
-            <span id="image-1" style="--i:1" data-title="หัวข้อรูปที่ 1" data-description="รายละเอียดรูปภาพที่หนึ่ง"><img src="./1.jpg" alt="Image 1"></span>
-            <span id="image-2" style="--i:2" data-title="หัวข้อรูปที่ 2" data-description="รายละเอียดรูปภาพที่สอง"><img src="./2.jpg" alt="Image 2"></span>
-            <span id="image-3" style="--i:3" data-title="หัวข้อรูปที่ 3" data-description="รายละเอียดรูปภาพที่สาม"><img src="./3.jpg" alt="Image 3"></span>
-            <span id="image-4" style="--i:4" data-title="หัวข้อรูปที่ 4" data-description="รายละเอียดรูปภาพที่สี่"><img src="./4.jpg" alt="Image 4"></span>
-            <span id="image-5" style="--i:5" data-title="หัวข้อรูปที่ 5" data-description="รายละเอียดรูปภาพที่ห้า"><img src="./5.jpg" alt="Image 5"></span>
-            <span id="image-6" style="--i:6" data-title="หัวข้อรูปที่ 6" data-description="รายละเอียดรูปภาพที่หก"><img src="./6.jpg" alt="Image 6"></span>
-            <span id="image-7" style="--i:7" data-title="หัวข้อรูปที่ 7" data-description="รายละเอียดรูปภาพที่เจ็ด"><img src="./7.jpg" alt="Image 7"></span>
-            <span id="image-8" style="--i:8" data-title="หัวข้อรูปที่ 8" data-description="รายละเอียดรูปภาพที่แปด"><img src="./8.jpg" alt="Image 8"></span>
+            <!-- *** แก้ไขสกุลไฟล์เป็น .JPG *** -->
+            <span id="image-1" style="--i:1" data-title="หัวข้อรูปที่ 1" data-description="รายละเอียดรูปภาพที่หนึ่ง"><img src="./1.JPG" alt="Image 1"></span>
+            <span id="image-2" style="--i:2" data-title="หัวข้อรูปที่ 2" data-description="รายละเอียดรูปภาพที่สอง"><img src="./2.JPG" alt="Image 2"></span>
+            <span id="image-3" style="--i:3" data-title="หัวข้อรูปที่ 3" data-description="รายละเอียดรูปภาพที่สาม"><img src="./3.JPG" alt="Image 3"></span>
+            <span id="image-4" style="--i:4" data-title="หัวข้อรูปที่ 4" data-description="รายละเอียดรูปภาพที่สี่"><img src="./4.JPG" alt="Image 4"></span>
+            <span id="image-5" style="--i:5" data-title="หัวข้อรูปที่ 5" data-description="รายละเอียดรูปภาพที่ห้า"><img src="./5.JPG" alt="Image 5"></span>
+            <span id="image-6" style="--i:6" data-title="หัวข้อรูปที่ 6" data-description="รายละเอียดรูปภาพที่หก"><img src="./6.JPG" alt="Image 6"></span>
+            <span id="image-7" style="--i:7" data-title="หัวข้อรูปที่ 7" data-description="รายละเอียดรูปภาพที่เจ็ด"><img src="./7.JPG" alt="Image 7"></span>
+            <span id="image-8" style="--i:8" data-title="หัวข้อรูปที่ 8" data-description="รายละเอียดรูปภาพที่แปด"><img src="./8.JPG" alt="Image 8"></span>
         </div>
     </main>
     
     <div id="music-player">
-        <audio id="music-track" src="./music.mp3" loop></audio> <!-- Corrected audio path -->
+        <!-- *** ตรวจสอบสกุลไฟล์เพลงของคุณด้วย (อาจจะเป็น .MP3) *** -->
+        <audio id="music-track" src="./music.mp3" loop></audio>
         <div id="play-pause-btn" class="play-btn play" title="Play/Pause Music"></div>
     </div>
 
@@ -331,7 +330,7 @@
             carousel.classList.remove('paused');
             textArea.classList.remove('visible');
             displayImageBox.classList.remove('visible');
-            document.body.classList.remove('details-visible'); // <<< Remove class from body
+            document.body.classList.remove('details-visible');
             if (currentActiveId) {
                 document.getElementById(currentActiveId).classList.remove('active');
             }
@@ -354,7 +353,7 @@
                 
                 mainDisplayImage.src = span.querySelector('img').src;
                 displayImageBox.classList.add('visible');
-                document.body.classList.add('details-visible'); // <<< Add class to body
+                document.body.classList.add('details-visible');
             }
         }
 
