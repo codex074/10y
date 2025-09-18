@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>10 Year Anniversary</title>
+    <!-- Import Custom Font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
     
     <!-- CSS Code -->
     <style>
@@ -18,10 +22,20 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background-color: #1a1a1a;
+            /* New: Animated Gradient Background */
+            background: linear-gradient(-45deg, #0d0d0d, #2c3e50, #1a1a1a, #23a6d5);
+            background-size: 400% 400%;
+            animation: gradientBG 20s ease infinite;
             margin: 0;
             overflow: hidden;
             font-family: sans-serif;
+        }
+
+        /* Animation for the background */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         #fireworks-canvas {
@@ -44,7 +58,7 @@
             pointer-events: none;
             transition: transform 0.5s ease-out, opacity 0.5s ease-out;
         }
-        #anniversary-header h1, #anniversary-header h2, #anniversary-header h3 {
+        #anniversary-header h1, #anniversary-header h2, #anniversary-header h3, #anniversary-header h4 {
             margin: 0;
             font-family: 'Garamond', serif;
             font-weight: bold;
@@ -61,6 +75,15 @@
         #anniversary-header h3 {
             font-size: 4vw;
         }
+        /* Style for the date */
+        #anniversary-header h4 {
+            font-size: 1.8vw;
+            font-weight: normal;
+            color: rgba(255, 255, 255, 0.8);
+            letter-spacing: 2px;
+            margin-top: 10px;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
         
         body.details-visible #anniversary-header {
             transform: translateY(-10vh) scale(0.6);
@@ -71,7 +94,7 @@
         /* --- 3D Gallery --- */
         .container {
             position: absolute;
-            top: 60%;
+            top: 65%; /* Moved down slightly to avoid overlap */
             transform: translateY(-50%);
             width: 180px;
             height: 270px;
@@ -134,14 +157,24 @@
             z-index: 101;
             opacity: 0;
             pointer-events: none;
+            font-family: 'Merriweather', serif;
         }
         #text-display-area.visible {
             opacity: 1;
             pointer-events: auto;
             transform: translate(-115%, -50%) scale(1);
         }
-        #text-display-area h2 { margin-top: 0; color: #ff4757; border-bottom: 1px solid #555; padding-bottom: 10px; }
-        #text-display-area p { line-height: 1.6; }
+        #text-display-area h2 { 
+            margin-top: 0; 
+            color: #ff4757; 
+            border-bottom: 1px solid #555; 
+            padding-bottom: 10px;
+            font-weight: 700;
+        }
+        #text-display-area p { 
+            line-height: 1.6;
+            font-weight: 400;
+        }
 
         /* --- Main Image Display Box --- */
         #display-image-box {
@@ -212,6 +245,9 @@
         #music-player:hover { 
             transform: scale(1.1);
         }
+        #music-player.playing {
+            box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.25);
+        }
         #music-player audio { display: none; }
         .play-btn { width: 100%; height: 100%; position: relative; }
         .play-btn.play::before { 
@@ -245,11 +281,12 @@
         <h1>10</h1>
         <h2>YEAR</h2>
         <h3>Anniversary</h3>
+        <!-- Changed date format -->
+        <h4>11.11.2025</h4>
     </header>
 
     <main id="gallery-container" class="container">
         <div class="carousel">
-            <!-- *** แก้ไขสกุลไฟล์เป็น .JPG *** -->
             <span id="image-1" style="--i:1" data-title="หัวข้อรูปที่ 1" data-description="รายละเอียดรูปภาพที่หนึ่ง"><img src="./1.JPG" alt="Image 1"></span>
             <span id="image-2" style="--i:2" data-title="หัวข้อรูปที่ 2" data-description="รายละเอียดรูปภาพที่สอง"><img src="./2.JPG" alt="Image 2"></span>
             <span id="image-3" style="--i:3" data-title="หัวข้อรูปที่ 3" data-description="รายละเอียดรูปภาพที่สาม"><img src="./3.JPG" alt="Image 3"></span>
@@ -262,7 +299,6 @@
     </main>
     
     <div id="music-player">
-        <!-- *** ตรวจสอบสกุลไฟล์เพลงของคุณด้วย (อาจจะเป็น .MP3) *** -->
         <audio id="music-track" src="./music.mp3" loop></audio>
         <div id="play-pause-btn" class="play-btn play" title="Play/Pause Music"></div>
     </div>
@@ -306,9 +342,11 @@
             if (audio.paused) {
                 audio.play();
                 playBtn.className = 'play-btn pause';
+                player.classList.add('playing');
             } else {
                 audio.pause();
                 playBtn.className = 'play-btn play';
+                player.classList.remove('playing');
             }
             };
             player.addEventListener('click', togglePlay);
